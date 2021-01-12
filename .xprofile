@@ -1,1 +1,4 @@
 . ~/.env_profile
+
+# Set wallpapers
+feh --bg-scale ~/Pictures/snorlax-wallpaper.jpg ~/Pictures/gengar-wallpaper-2x.png
