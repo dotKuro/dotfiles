@@ -39,7 +39,7 @@ tray-padding-left = 2
 type = internal/xkeyboard
 blacklist-0 = num lock
 
-format-prefix = "a"
+format-prefix = " "
 format-prefix-foreground = ${colors.foreground-alt}
 label-layout = %layout%
 format-prefix-underline = ${colors.primary}
