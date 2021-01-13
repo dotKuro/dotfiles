@@ -6,3 +6,5 @@
 
 # Set wallpapers
 feh --bg-scale ~/Pictures/gengar-wallpaper-2x.png ~/Pictures/snorlax-wallpaper.jpg 
+
+xss-lock -- betterlockscreen -l blur &

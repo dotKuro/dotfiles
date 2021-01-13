@@ -54,6 +54,7 @@ keybindings conf@(XConfig {XM.modMask = modMask}) =
       applicationKeyBindings =
         [ ((modMask, XM.xK_w), spawn "termite")
         , ((modMask, XM.xK_e), spawn "rofi -show drun")
+        , ((modMask, XM.xK_s), spawn "loginctl lock-session")
         ]
 
       -- navigate the window manager 
@@ -106,7 +107,7 @@ keybindings conf@(XConfig {XM.modMask = modMask}) =
       -- fn utils
       fnKeyBindings = 
         [ -- volume control
-        , ((noModMask, xF86XK_AudioRaiseVolume), spawn "pamixer -i 10 --allow-boost")
+          ((noModMask, xF86XK_AudioRaiseVolume), spawn "pamixer -i 10 --allow-boost")
         , ((noModMask, xF86XK_AudioLowerVolume), spawn "pamixer -d 10 --allow-boost")
         , ((noModMask, xF86XK_AudioMute), spawn "pamixer -t ")
         ]
