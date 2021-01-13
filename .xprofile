@@ -1,12 +1,1 @@
 . ~/.env_profile
-
-
-# adjust screen settings
-. ~/.screenlayout/default.sh
-
-# Set wallpapers
-feh --bg-scale ~/Pictures/gengar-wallpaper-2x.png ~/Pictures/snorlax-wallpaper.jpg 
-
-xss-lock -- betterlockscreen -l blur &
-
-xautolock -time 30 -locker "systemctl suspend" -detectsleep &
