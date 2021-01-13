@@ -18,7 +18,7 @@ main = do
     , XM.manageHook = manageHooks
     , XM.borderWidth = 5
     , XM.startupHook = autostart
-    , XM.focusedBorderColor = "#331177"
+    , XM.focusedBorderColor = "#5E81AC"
     , XM.normalBorderColor = "#000000"
     }
   

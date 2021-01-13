@@ -1,0 +1,161 @@
+[colors]
+;background = ${xrdb:color0:#222}
+background = #000
+background-alt = #222
+;foreground = ${xrdb:color7:#222}
+foreground = #dfdfdf
+foreground-alt = #555
+primary = #5E81AC
+alert = #bd2c40
+
+[global/wm]
+margin-bottom = 5
+
+[bar/primary]
+monitor = ${env:MONITOR:DisplayPort-0}
+width = 100%
+height = 27
+
+padding=2
+
+module-margin-left=2
+line-size = 2
+
+font-0 = SourceCodePro:pixelsize=12
+font-1 = Font Awesome 5 Free Solid:pixelsize=12
+font-2 = Font Awesome 5 Free Regular:pixelsize=12
+
+background = ${colors.background}
+foreground = ${colors.foreground}
+
+modules-left = ewmh
+modules-center = date
+modules-right = filesystem xkeyboard memory cpu wlan eth pulseaudio
+
+tray-position = right
+tray-padding-left = 2
+
+[module/xkeyboard]
+type = internal/xkeyboard
+blacklist-0 = num lock
+
+format-prefix = "a"
+format-prefix-foreground = ${colors.foreground-alt}
+label-layout = %layout%
+format-prefix-underline = ${colors.primary}
+label-layout-underline = ${colors.primary}
+
+label-indicator-padding = 1
+label-indicator-margin = 1
+label-indicator-background = ${colors.primary}
+
+[module/filesystem]
+type = internal/fs
+interval = 25
+
+mount-0 = /
+
+format-mounted-prefix = " "
+format-mounted-prefix-foreground = ${colors.foreground-alt}
+format-mounted-underline = ${colors.primary}
+label-mounted = %free% free
+
+label-unmounted = %mountpoint% not mounted
+label-unmounted-padding = 1
+label-unmounted-margin = 1
+label-unmounted-background = ${colors.primary}
+
+[module/cpu]
+type = internal/cpu
+interval = 2
+format-prefix = " "
+format-prefix-foreground = ${colors.foreground-alt}
+format-underline = ${colors.primary}
+label = %percentage%%
+
+[module/memory]
+type = internal/memory
+interval = 2
+format-prefix = " "
+format-prefix-foreground = ${colors.foreground-alt}
+format-underline = ${colors.primary}
+label = %percentage_used%%
+
+[module/wlan]
+type = internal/network
+interface = wlo1
+interval = 3.0
+
+format-connected = <label-connected>
+format-connected-prefix = " "
+format-connected-prefix-foreground = ${colors.foreground-alt}
+format-connected-underline = ${colors.primary} 
+label-connected = %essid%
+
+format-disconnected = <label-disconnected>
+format-disconnected-prefix = " "
+format-disconnected-prefix-foreground = ${colors.foreground-alt}
+format-disconnected-underline = ${colors.alert}
+label-disconnected = wlan
+label-disconnected-foreground = ${colors.foreground-alt}
+
+[module/eth]
+type = internal/network
+interface = enp42s0
+interval = 3.0
+
+format-connected = <label-connected>
+format-connected-prefix = " "
+format-connected-prefix-foreground = ${colors.foreground-alt}
+format-connected-underline = ${colors.primary} 
+label-connected = %local_ip%
+
+format-disconnected = <label-disconnected>
+format-disconnected-prefix = " "
+format-disconnected-prefix-foreground = ${colors.foreground-alt}
+format-disconnected-underline = ${colors.alert}
+label-disconnected = eth
+label-disconnected-foreground = ${colors.foreground-alt}
+
+[module/date]
+type = internal/date
+interval = 1
+
+date = 1%Y-%m-%d
+time = %H:%M:%S
+
+format-prefix = " "
+format-prefix-foreground = ${colors.foreground-alt}
+format-underline = ${colors.primary}
+
+label = %date% %time%
+
+[module/pulseaudio]
+type = internal/pulseaudio
+
+format-volume-prefix = " "
+format-volume-prefix-foreground = ${colors.foreground-alt}
+format-volume = <bar-volume>
+
+format-muted-prefix = " "
+format-muted-prefix-foreground = ${colors.foreground-alt}
+label-muted =  muted
+label-muted-foreground = ${colors.alert}
+
+bar-volume-width = 10
+bar-volume-gradient = false
+bar-volume-indicator = |
+bar-volume-fill = ─
+bar-volume-empty = ─
+bar-volume-empty-foreground = ${colors.foreground-alt}
+
+[module/ewmh]
+type = internal/xworkspaces
+
+label-active = " %name% "
+label-active-background = ${colors.primary}
+
+label-occupied = " %name% "
+label-empty = ""
+
+; vim:ft=dosini

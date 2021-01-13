@@ -7,3 +7,4 @@ autostart :: X()
 autostart = do
   spawnOnce "xcompmgr -n -C"
   spawnOnce "udiskie --tray"
+  spawnOnce "polybar primary"
