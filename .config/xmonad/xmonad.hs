@@ -1,3 +1,4 @@
+import Autostart (autostart)
 import Keybindings (keybindings, keymod)
 import Layouts (layouts, manageHooks)
 import Workspaces (workspaceNames)
@@ -16,6 +17,7 @@ main = do
     , XM.workspaces = workspaceNames
     , XM.manageHook = manageHooks
     , XM.borderWidth = 5
+    , XM.startupHook = autostart
     , XM.focusedBorderColor = "#331177"
     , XM.normalBorderColor = "#000000"
     }
