@@ -9,4 +9,4 @@ feh --bg-scale ~/Pictures/gengar-wallpaper-2x.png ~/Pictures/snorlax-wallpaper.j
 
 xss-lock -- betterlockscreen -l blur &
 
-xautolock -time 30 -locker "systemctl suspend" -detectsleep
+xautolock -time 30 -locker "systemctl suspend" -detectsleep &
