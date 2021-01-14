@@ -1,5 +1,7 @@
 . ~/.env_profile
 
+export QT_QPA_PLATFORMTHEME=qt5ct
+
 # This happens here rather than in the xmonad start routine to avoid that the screenlayout is not available from the start
 ~/.screenlayout/default.sh
 feh --bg-scale ~/Pictures/snorlax-wallpaper.jpg ~/Pictures/gengar-wallpaper-2x.png
