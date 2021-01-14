@@ -1,0 +1,14 @@
+{
+	"answerdiff": "ALL",
+	"answeredit": "",
+	"sortby": "votes",
+	"searchby": "name-desc",
+	"removemake": "no",
+	"requestsplitn": 150,
+	"timeupdate": true,
+	"devel": true,
+	"upgrademenu": true,
+	"cleanmenu": true,
+	"diffmenu": true,
+	"editmenu": true
+}
