@@ -1,12 +1,13 @@
 module Autostart (autostart) where
 
-import XMonad(X, spawn)
 import XMonad.Util.SpawnOnce (spawnOnce)
 
-autostart :: X()
+import qualified XMonad as XM
+
+autostart :: XM.X()
 autostart = do
-  spawnOnce "xcompmgr -n -C"
-  spawnOnce "udiskie --tray"
-  spawnOnce "polybar primary"
-  spawnOnce "xss-lock -- betterlockscreen -l blur"
+  spawnOnce "xcompmgr -n -C" -- compositor
+  spawnOnce "udiskie --tray" -- auto mounter
+  spawnOnce "polybar primary" -- taskbar
+  spawnOnce "xss-lock -- betterlockscreen -l blur" -- lock-screen daemon
 
