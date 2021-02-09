@@ -9,18 +9,9 @@ import Keybindings.Navigation (navigationKeybindings)
 import Keybindings.Workspaces (workspaceKeybindings)
 
 
-
--- shortcuts and key bindings
 keybindings _ =
     Data.Map.fromList $
       applicationKeybindings
       ++ mediaKeybindings
       ++ navigationKeybindings
       ++ workspaceKeybindings
---        [ ((modMask, XM.xK_c), createMetaWorkspaceFromMenu)
---        , ((modMask, XM.xK_v), switchMetaWorkspaceFromMenu)
---        ]
---        ++
---        [ ((modMask, XM.xK_semicolon), nextScreen),
---          ((modMask .|. shiftMask, XM.xK_semicolon), shiftNextScreen)
---        ]

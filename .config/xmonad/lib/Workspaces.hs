@@ -24,7 +24,7 @@ data ActiveMetaWorkspace = Scratch | Named String
 
 data MetaWorkspaces = MetaWorkspaces {
   active :: ActiveMetaWorkspace,
-  last :: ActiveMetaWorkspace,
+  lastMetaWorkspace :: ActiveMetaWorkspace,
   allNames :: [String]
   }
 
@@ -32,7 +32,7 @@ workspaceCount :: Int
 workspaceCount = 3 -- number of workspaces for each meta workspace
 
 instance XM.ExtensionClass MetaWorkspaces where
-  initialValue = MetaWorkspaces Scratch Nothing []
+  initialValue = MetaWorkspaces Scratch Scratch []
 
 initialWorkspaceNames :: [String]
 initialWorkspaceNames =  createWorkspaceNames Scratch
@@ -53,12 +53,12 @@ switchOrCreateMetaWorkSpace (Named name) = do
   Control.Monad.when
     (name `notElem` allNames_)
     $ createMetaWorkspace name
-  switchMetaWorkspace name
+  switchMetaWorkspace $ Named name
     
 
 switchMetaWorkspace :: ActiveMetaWorkspace -> XM.X()
-switchMetaWorkspace metwaWorkspace = do
-  XS.modify (\metas -> metas { active = metaWorkspace, lastNamed = active metas })
+switchMetaWorkspace metaWorkspace = do
+  XS.modify (\metas -> metas { active = metaWorkspace, lastMetaWorkspace = active metas })
   mapM_ (\number -> viewOnScreen (number-1) number) $ reverse [1..XM.S workspaceCount]
   where
     name =
@@ -77,37 +77,38 @@ createMetaWorkspace name = do
 
 switchOrCreateMetaWorkSpaceFromMenu :: XM.X()
 switchOrCreateMetaWorkSpaceFromMenu = do
-  metWorkspace <- getMetWorkspaceFromMenu "switch metaworkspace"
-  switchOrCreateMetaWorkSpace metaWorkspace
+  metaWorkspace <- getMetaWorkspaceFromMenu "switch metaworkspace"
+  XM.whenJust metaWorkspace switchOrCreateMetaWorkSpace
 
 
 shiftWindowToMetaWorkspace :: ActiveMetaWorkspace -> XM.X()
-shiftWindowToMetaWorkspace Scratch = shift "1"
-shiftWindowToMetaWorkspace name = shift (name ++ "1")
+shiftWindowToMetaWorkspace metaWorkspace =
+  case metaWorkspace of
+    Scratch -> shift "1"
+    Named name -> shift (name ++ "1")
   where
     shift = XM.windows . XW.shift 
 
 
 shiftToMetaWorkspaceFromMenu :: XM.X()
 shiftToMetaWorkspaceFromMenu = do
-  metWorkspace <- getMetWorkspaceFromMenu "shift window to metaworkspace"
-  shiftWindowToMetaWorkspace metaWorkspace
+  metaWorkspace <- getMetaWorkspaceFromMenu "shift window to metaworkspace"
+  XM.whenJust metaWorkspace shiftWindowToMetaWorkspace
 
 
 toggleScratchMetaWorkspace :: XM.X()
 toggleScratchMetaWorkspace = do
-  MetaWorkspaces { active = active_, lastNamed = lastNamed_ } <- XS.get
-  case (active_, lastNamed_) of
+  MetaWorkspaces { active = active_, lastMetaWorkspace = lastMetaWorkspace_ } <- XS.get
+  case (active_, lastMetaWorkspace_) of
     (Named mws, _) -> switchMetaWorkspace Scratch
-    (Scratch, Just mws) -> switchMetaWorkspace mws
-    (Scratch, Nothing) -> return ()
+    (Scratch, mws) -> switchMetaWorkspace mws
 
 
-getMetWorkspaceFromMenu :: String -> XM.X Maybe ActiveMetaWorkspace
-getMetWorkspaceFromMenu prompt =
+getMetaWorkspaceFromMenu :: String -> XM.X (Maybe ActiveMetaWorkspace)
+getMetaWorkspaceFromMenu prompt = do
   MetaWorkspaces { allNames = allNames_ } <- XS.get
-  name <- DMenu.menuArgs "rofi" ["-dmenu", "-p", prompt ] ("scratch":allNames_)
-  case name of
+  name <- Dmenu.menuArgs "rofi" ["-dmenu", "-p", prompt ] ("scratch":allNames_)
+  return $ case name of
     "" -> Nothing
     "scratch" -> Just Scratch
     _ -> Just $ Named name
