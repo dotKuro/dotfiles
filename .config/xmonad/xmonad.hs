@@ -3,6 +3,7 @@ import qualified Keybindings.Shared as KS
 import Autostart (autostart)
 import Keybindings (keybindings)
 import Layouts (layouts, manageHooks)
+import Polybar (polybarLogging)
 import Workspaces (initialWorkspaceNames)
 import XMonad (xmonad)
 import XMonad.Config (def)
@@ -21,6 +22,7 @@ main = do
     , XM.manageHook = manageHooks
     , XM.borderWidth = 5
     , XM.startupHook = autostart
+    , XM.logHook = polybarLogging
     , XM.focusedBorderColor = "#5E81AC"
     , XM.normalBorderColor = "#000000"
     }

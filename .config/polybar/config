@@ -12,9 +12,10 @@ alert = #bd2c40
 margin-bottom = 5
 
 [bar/primary]
-monitor = ${env:MONITOR:DisplayPort-0}
+monitor = ${env:MONITOR:DisplayPort-2}
 width = 100%
 height = 27
+enable-ipc = true
 
 padding=2
 
@@ -28,7 +29,7 @@ font-2 = Font Awesome 5 Free Regular:pixelsize=12
 background = ${colors.background}
 foreground = ${colors.foreground}
 
-modules-left = ewmh
+modules-left = workspaces
 modules-center = date
 modules-right = filesystem xkeyboard memory cpu wlan eth pulseaudio
 
@@ -149,13 +150,8 @@ bar-volume-fill = ─
 bar-volume-empty = ─
 bar-volume-empty-foreground = ${colors.foreground-alt}
 
-[module/ewmh]
-type = internal/xworkspaces
+[module/workspaces]
+type = custom/ipc
+hook-0 = cat /tmp/xmonad-polybar
 
-label-active = " %name% "
-label-active-background = ${colors.primary}
-
-label-occupied = " %name% "
-label-empty = ""
-
-; vim:ft=dosini
+initial = 1
