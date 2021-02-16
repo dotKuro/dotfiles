@@ -2,13 +2,15 @@ module Polybar (polybarLogging) where
 
 import Workspaces (MetaWorkspaces(..), ActiveMetaWorkspace(..))
 
-import qualified System.Directory
-import System.FilePath ((</>))
+import qualified Data.List.Extra
 import qualified System.Process
 
 import qualified XMonad as XM
 import qualified XMonad.StackSet as XW
 import qualified XMonad.Util.ExtensibleState as XS
+import qualified XMonad.Hooks.DynamicLog as XD
+
+
 
 polybarLogging :: XM.X ()
 polybarLogging = do
@@ -18,22 +20,24 @@ polybarLogging = do
     Scratch -> logMetaWorkspace "scratch"
   where
     logMetaWorkspace name = do
-      tempDir <- XM.io System.Directory.getTemporaryDirectory
-      workspaceString <- getWorkspaceString
-      XM.io $ writeFile (tempDir </> "xmonad-polybar" ) $
-        withPaddedBackground name ++ " " ++ workspaceString
+      currentWorkspace <- getCurrentlyActiveWorkspace
+      XM.io $ writeFile "/tmp/xmonad-polybar"
+        $ metaWorkspaceString name `space` workspaceString currentWorkspace
       XM.io $ System.Process.callCommand "polybar-msg hook workspaces 1"
+      
     getCurrentlyActiveWorkspace = do
       currentTag <- XM.withWindowSet (return . XW.currentTag)
       return $ last currentTag
-    getWorkspaceString = do
-      currentWorkspace <- getCurrentlyActiveWorkspace
-      return $ concatMap (\ws ->
-             if ws == currentWorkspace
-               then withPaddedBackground [ws]
-               else padded [ws]
-          ) ['1'..'3']
-    padded text = " " ++ text ++ " "
-    withPaddedBackground text =
-      "%{B#5E81AC}" ++ padded text ++ "%{B-}"
+
+    metaWorkspaceString name = withBackground $ Data.List.Extra.upper $ XD.pad name
+    workspaceString currentWorkspace = do
+      concatMap (\ws ->
+           if ws == currentWorkspace
+             then withBackground $ XD.pad [ws]
+             else XD.pad [ws]
+        ) ['1'..'3']
+        
+    withBackground text =
+      "%{B#5E81AC}" ++ text ++ "%{B-}"
+    space a b = a ++ " " ++ b
   
