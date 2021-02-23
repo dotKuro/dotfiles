@@ -1,0 +1,14 @@
+[init]
+	defaultBranch = main
+[user]
+	email = mail@akampf.dev
+	name = Alexander \"dotKuro\" Kampf
+	signingKey = 28A867633F25367A
+[commit]
+	gpgsign = true
+[gpg]
+	program = gpg
+[pull]
+	rebase = false
+[core]
+	excludesFile = .config/git/ignore
