@@ -1,6 +1,6 @@
 #!/bin/sh
 
-[ "${DISPLAY}" = '' ] && exec /usr/bin/pinentry-qt "$@"
+[ "${DISPLAY}" = '' ] && exec /usr/bin/pinentry-gtk-2 "$@"
 
 exec /usr/bin/pinentry-curses "$@"
 
