@@ -10,7 +10,7 @@ applicationKeybindings =
   , ((KS.modKey, XM.xK_e), XM.spawn "rofi -show drun") -- application launcher
   , ((KS.modKey, XM.xK_s), XM.spawn "loginctl lock-session") -- screen locker
   , ((KS.modKey, XM.xK_a), XM.spawn "qutebrowser") -- browser
-  , ((KS.modkey, XM.xK_p), XM.spawn "passmenu") -- password manager
+  , ((KS.modKey, XM.xK_p), XM.spawn "passmenu") -- password manager
   ]
 
 
