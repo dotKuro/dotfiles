@@ -10,4 +10,5 @@ autostart = do
   spawnOnce "udiskie --tray" -- auto mounter
   spawnOnce "polybar primary" -- taskbar
   spawnOnce "xss-lock -- betterlockscreen -l blur" -- lock-screen daemon
+  spawnOnce "nextcloud" -- nextcloud client
 
