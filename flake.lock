@@ -1,0 +1,66 @@
+{
+  "nodes": {
+    "home-manager": {
+      "inputs": {
+        "nixpkgs": [
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1775268934,
+        "narHash": "sha256-Sa5tW5kYPJornQEkFVD43F/0d4/WP+/GLTNktTFe2qU=",
+        "owner": "nix-community",
+        "repo": "home-manager",
+        "rev": "9dc93220c1c9a410ef6277d6dc55c571d9e592d0",
+        "type": "github"
+      },
+      "original": {
+        "owner": "nix-community",
+        "ref": "master",
+        "repo": "home-manager",
+        "type": "github"
+      }
+    },
+    "nixpkgs": {
+      "locked": {
+        "lastModified": 1775036866,
+        "narHash": "sha256-ZojAnPuCdy657PbTq5V0Y+AHKhZAIwSIT2cb8UgAz/U=",
+        "owner": "nixos",
+        "repo": "nixpkgs",
+        "rev": "6201e203d09599479a3b3450ed24fa81537ebc4e",
+        "type": "github"
+      },
+      "original": {
+        "owner": "nixos",
+        "ref": "nixos-unstable",
+        "repo": "nixpkgs",
+        "type": "github"
+      }
+    },
+    "root": {
+      "inputs": {
+        "home-manager": "home-manager",
+        "nixpkgs": "nixpkgs",
+        "wallpapers": "wallpapers"
+      }
+    },
+    "wallpapers": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1775306706,
+        "narHash": "sha256-/3RDgHiAC2ZIeoLobHd0ffe1QO9UfFwzSsJmUTQmNAc=",
+        "ref": "refs/heads/main",
+        "rev": "e6c5b6fa566cbc7d4ccd0b2328df279b0881b40d",
+        "revCount": 1,
+        "type": "git",
+        "url": "file:///home/kuro/Pictures/Wallpapers"
+      },
+      "original": {
+        "type": "git",
+        "url": "file:///home/kuro/Pictures/Wallpapers"
+      }
+    }
+  },
+  "root": "root",
+  "version": 7
+}
