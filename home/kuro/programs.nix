@@ -16,9 +16,11 @@
   };
 
   home.packages = with pkgs; [
+    claude-code
     discord
     prismlauncher
     slack
+    sway-contrib.grimshot
     telegram-desktop
   ];
 }
