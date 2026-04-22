@@ -4,6 +4,7 @@
   wayland.windowManager.hyprland = {
     enable = true;
     systemd.enable = false;
+    portalPackage = pkgs.xdg-desktop-portal-hyprland;
     settings = {
       "$mod" = "SUPER";
       general = {
@@ -50,6 +51,8 @@
       );
     };
   };
+
+  xdg.portal.extraPortals = [ pkgs.xdg-desktop-portal-gtk ];
 
   services.hyprpaper = {
     enable = true;

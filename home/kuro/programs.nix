@@ -7,6 +7,7 @@
     rofi.enable = true;
     jq.enable = true;
     htop.enable = true;
+    poetry.enable = true;
     vscode.enable = true;
     gh.enable = true;
   };
@@ -16,10 +17,15 @@
   };
 
   home.packages = with pkgs; [
+    cargo
     claude-code
     discord
+    gparted
+    nmap
     prismlauncher
+    rpi-imager
     slack
+    spotify
     sway-contrib.grimshot
     telegram-desktop
   ];
