@@ -2,7 +2,9 @@
 
 {
   programs = {
+    gcc.enable = true;
     git.enable = true;
+    go.enable = true;
     kitty.enable = true;
     rofi.enable = true;
     jq.enable = true;
@@ -22,10 +24,12 @@
     discord
     gparted
     nmap
+    nodejs
     prismlauncher
     rpi-imager
     slack
     spotify
+    supabase-cli
     sway-contrib.grimshot
     telegram-desktop
   ];

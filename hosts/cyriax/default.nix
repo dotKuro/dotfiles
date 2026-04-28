@@ -7,6 +7,7 @@
 
       ./audio.nix
       ./boot.nix
+      ./docker.nix
       ./fonts.nix
       ./hyprland.nix
       ./services.nix
