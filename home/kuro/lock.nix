@@ -1,4 +1,4 @@
-{ pkgs, ... }:
+{ inputs, ... }:
 
 {
   programs.hyprlock = {
@@ -9,11 +9,11 @@
       };
 
       background = [
-        { path = "$HOME/Pictures/Wallpapers/Quasar.png"; }
+        { path = "${inputs.wallpapers}/Quasar.png"; }
       ];
-      
+
       input-field = [
-        { 
+        {
           monitor = "DP-1";
           outline_thickness = 3;
           outer_color = "rgb(00ffff)";
@@ -26,7 +26,7 @@
         }
       ];
       shape = [
-        { 
+        {
           monitor = "DP-1";
           border_size = 3;
           border_color = "rgb(00ffff)";
@@ -37,12 +37,12 @@
         }
       ];
       label = [
-        { 
+        {
           monitor = "DP-1";
           text = "cmd[update:0] echo '<i>$USER</i>'";
           color = "rgb(00ffff)";
           position = "0, 65";
-	  font_size = 24;
+          font_size = 24;
           z_index = 1;
         }
       ];

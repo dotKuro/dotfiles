@@ -1,5 +1,3 @@
-{ ... }:
-
 {
   users.users.kuro = {
     isNormalUser = true;

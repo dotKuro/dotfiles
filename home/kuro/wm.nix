@@ -1,4 +1,4 @@
-{ pkgs, ... }:
+{ inputs, pkgs, ... }:
 
 {
   wayland.windowManager.hyprland = {
@@ -12,7 +12,7 @@
         layout = "master";
         border_size = "2";
         "col.active_border" = "rgb(00ffff)";
-	gaps_in = "10";
+        gaps_in = "10";
         gaps_out = "15";
       };
       animations.enabled = true;
@@ -41,15 +41,19 @@
         "$mod, TAB, focusmonitor, +1"
         "$mod SHIFT, TAB, movewindow, mon:+1"
         "$mod, F, exec, toggle-layouts"
-      ] ++ (
-        builtins.concatLists (builtins.genList (i:
-          let ws = i + 1;
-          in [
+      ]
+      ++ (builtins.concatLists (
+        builtins.genList (
+          i:
+          let
+            ws = i + 1;
+          in
+          [
             "$mod, code:1${toString i}, focusworkspaceoncurrentmonitor, ${toString ws}"
             "$mod SHIFT, code:1${toString i}, movetoworkspacesilent, ${toString ws}"
           ]
-        ) 9)
-      );
+        ) 9
+      ));
     };
   };
 
@@ -61,14 +65,14 @@
       splash = false;
       wallpaper = [
         {
-          monitor = ""; 
-          path = "$HOME/Pictures/Wallpapers/Quasar.png";
+          monitor = "";
+          path = "${inputs.wallpapers}/Quasar.png";
           fit_mode = "cover";
         }
       ];
     };
   };
-  
+
   home.sessionVariables.NIXOS_OZONE_WL = "1";
 
   programs.waybar = {
@@ -77,12 +81,17 @@
       statusBar = {
         layer = "top";
         position = "top";
-        
+
         modules-center = [ "hyprland/workspaces" ];
-        modules-right = [ "idle_inhibitor" "pulseaudio" "network" "tray" ];
+        modules-right = [
+          "idle_inhibitor"
+          "pulseaudio"
+          "network"
+          "tray"
+        ];
         modules-left = [ "clock" ];
-        
-	"hyprland/workspaces" = {
+
+        "hyprland/workspaces" = {
           format = "{icon}";
           format-icons = {
             active = "";
@@ -90,15 +99,21 @@
           };
           move-to-monitor = true;
           persistent-workspaces = {
-            "*" = [ 1 2 3 4 5 ];
+            "*" = [
+              1
+              2
+              3
+              4
+              5
+            ];
           };
         };
-        
+
         tray = {
           font-size = 18;
           spacing = 10;
         };
-        
+
         network = {
           format-wifi = "󰤢";
           format-ethernet = "󰈀 ";
@@ -107,16 +122,20 @@
           tooltip-format-ethernet = "connected - {ipaddr}";
           tooltip-format-wifi = "connected - {essid} ({signalStrength}%)";
         };
-        
+
         pulseaudio = {
           format = "{icon:2}  {volume:3}%";
           format-muted = "<span color='#ff00ff'>  muted</span>";
-          format-icons = [ "" "" " " ];
+          format-icons = [
+            ""
+            ""
+            " "
+          ];
           on-click = "pamixer --toggle-mute";
           on-scroll-up = "pamixer --increase 5";
           on-scroll-down = "pamixer --decrease 5";
         };
-        
+
         idle_inhibitor = {
           format = "{icon}";
           format-icons = {
@@ -144,11 +163,11 @@
         font-weight: 600;
         font-size: 18px;
       }
-      
+
       #waybar {
         background: transparent;
       }
-      
+
       .modules-center,
       .modules-right,
       .modules-left {
@@ -161,7 +180,7 @@
       .modules-left {
         color: #00ffff;
       }
- 
+
       #workspaces button {
         color: #333333;
         background: none;
@@ -174,7 +193,7 @@
         outline: inherit;
         border: inherit;
       }
- 
+
       #workspaces button.active {
         color: #00ffff;
       }
@@ -186,13 +205,13 @@
       #idle_inhibitor {
         padding: 0 10px;
       }
- 
+
       #workspaces button,
       #network,
       #idle_inhibitor {
         font-family: "Font Awesome 7 Free";
       }
- 
+
       #pulseaudio,
       #clock {
         font-family: "Hack Nerd Font";
@@ -200,5 +219,5 @@
 
     '';
   };
-  
+
 }

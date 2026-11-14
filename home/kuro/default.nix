@@ -1,9 +1,9 @@
-{ config, pkgs, ... }:
+{ pkgs, ... }:
 
 {
   home.username = "kuro";
   home.homeDirectory = "/home/kuro";
-  
+
   imports = [
     ./chrome.nix
     ./lock.nix

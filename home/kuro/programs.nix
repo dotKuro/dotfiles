@@ -13,7 +13,7 @@
     vscode.enable = true;
     gh.enable = true;
   };
-  
+
   services = {
     tailscale-systray.enable = true;
   };

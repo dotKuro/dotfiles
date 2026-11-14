@@ -15,7 +15,7 @@ in
     withUWSM = true;
   };
 
-  security.pam.services.hyprlock = {};
+  security.pam.services.hyprlock = { };
 
   services.displayManager.sddm = {
     enable = true;
@@ -25,10 +25,9 @@ in
       kdePackages.qtmultimedia
     ];
   };
-  
+
   environment.systemPackages = with pkgs; [
     kitty
     sddm-theme
-    kdePackages.qtmultimedia
   ];
 }
