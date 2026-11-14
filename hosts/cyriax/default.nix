@@ -25,7 +25,9 @@
   ];
   nixpkgs.config.allowUnfree = true;
 
-  environment.systemPackages = [ pkgs.vim ];
+  environment.systemPackages = with pkgs; [
+    vim
+  ];
 
   system.stateVersion = "25.11";
 }

@@ -3,7 +3,24 @@
 {
   home.packages = with pkgs; [
     papirus-folders
+    rose-pine-hyprcursor
   ];
+
+  home.pointerCursor = {
+    enable = true;
+    name = "BreezeX-RosePine-Linux";
+    package = pkgs.rose-pine-cursor;
+    size = 36;
+    gtk.enable = true;
+  };
+
+  wayland.windowManager.hyprland.settings = {
+    env = [
+      "HYPRCURSOR_THEME,rose-pine-hyprcursor"
+      "HYPRCURSOR_SIZE,36"
+    ];
+    cursor.enable_hyprcursor = true;
+  };
 
   gtk = {
     enable = true;

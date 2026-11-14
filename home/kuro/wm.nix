@@ -24,11 +24,6 @@
       input = {
         kb_layout = "eu";
       };
-      env = [
-        "HYPRCURSOR_THEME,rose-pine-hyercursor"
-        "HYPRCURSOR_SIZE,36"
-      ];
-      cursor.enable_hyprcursor = true;
       bind = [
         "$mod, W, exec, kitty"
         "$mod, E, exec, rofi -show drun"
