@@ -3,6 +3,7 @@
 {
   wayland.windowManager.hyprland = {
     enable = true;
+    configType = "hyprlang";
     systemd.enable = false;
     portalPackage = pkgs.xdg-desktop-portal-hyprland;
     settings = {

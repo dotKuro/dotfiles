@@ -19,18 +19,34 @@
   };
 
   home.packages = with pkgs; [
-    cargo
+    ausweisapp
     claude-code
     discord
+    feh
+    firefox
+    google-cloud-sdk
+    gnumake
     gparted
+    guvcview
+    jadx
+    jdk
+    llvmPackages.llvm
+    llvmPackages.libclang
+    lld
+    mitmproxy
     nmap
     nodejs
     prismlauncher
     rpi-imager
+    rustup
     slack
     spotify
     supabase-cli
     sway-contrib.grimshot
     telegram-desktop
+    trunk
+    unzip
+    usbutils
+    zip
   ];
 }

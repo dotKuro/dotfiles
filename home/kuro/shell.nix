@@ -11,6 +11,7 @@
       ec = "$EDITOR ~/Dotfiles/home/kuro";
       esc = "$EDITOR ~/Dotfiles/hosts/cyriax";
       mc = "sudo nixos-rebuild switch --flake $HOME/Dotfiles";
+      claude-private = "CLAUDE_CONFIG_DIR=~/.claude-private claude";
     };
     
     zplug = {

@@ -27,8 +27,13 @@
     IdleActionSec = "10min";
   };
 
+  users.users.kuro.extraGroups = ["adbusers"];
+
   environment.systemPackages = with pkgs; [
+    android-tools
     vim
   ];
+
+  networking.firewall.enable = false;
 }
 
