@@ -8,6 +8,11 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
+    nixos-wsl = {
+      url = "github:nix-community/NixOS-WSL/main";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
     wallpapers = {
       url = "git+file:///home/kuro/Pictures/Wallpapers";
       flake = false;
@@ -28,6 +33,14 @@
         cyriax = lib.nixosSystem {
           system = "x86_64-linux";
           modules = [ ./hosts/cyriax ];
+          specialArgs = {
+            inherit inputs;
+          };
+        };
+
+        cyriax-wsl = lib.nixosSystem {
+          system = "x86_64-linux";
+          modules = [ ./hosts/cyriax-wsl ];
           specialArgs = {
             inherit inputs;
           };

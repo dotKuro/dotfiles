@@ -1,4 +1,11 @@
+{ pkgs, ... }:
+
 {
+  imports = [
+    ./cli.nix
+    ./shell.nix
+  ];
+
   home.username = "kuro";
   home.homeDirectory = "/home/kuro";
 
@@ -6,5 +13,10 @@
 
   home.sessionVariables = {
     EDITOR = "vim";
+    LIBCLANG_PATH = "${pkgs.llvmPackages.libclang.lib}/lib";
   };
+
+  home.sessionPath = [
+    "$HOME/.cargo/bin"
+  ];
 }

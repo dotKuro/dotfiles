@@ -17,5 +17,7 @@
 
   networking.hostName = "cyriax";
 
+  virtualisation.docker.storageDriver = "btrfs";
+
   system.stateVersion = "25.11";
 }
