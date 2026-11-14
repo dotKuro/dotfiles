@@ -12,7 +12,6 @@
     ./hyprland.nix
     ./networking.nix
     ./nixld.nix
-    ./power.nix
     ./users.nix
     ./zsh.nix
   ];
