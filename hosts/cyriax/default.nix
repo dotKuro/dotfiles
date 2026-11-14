@@ -10,6 +10,7 @@
       ./docker.nix
       ./fonts.nix
       ./hyprland.nix
+      ./nixld.nix
       ./services.nix
       ./users.nix
       ./zsh.nix
