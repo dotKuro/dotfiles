@@ -12,6 +12,11 @@
     initialPassword = "1337";
   };
 
+  age.secrets.claude-token = {
+    file = ../../../../secrets/claude-token.age;
+    owner = "kuro";
+  };
+
   home-manager = {
     useGlobalPkgs = true;
     useUserPackages = true;

@@ -19,5 +19,7 @@
 
   virtualisation.docker.storageDriver = "btrfs";
 
+  fileSystems."/home".neededForBoot = true;
+
   system.stateVersion = "25.11";
 }

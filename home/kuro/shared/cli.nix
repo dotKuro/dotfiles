@@ -1,7 +1,15 @@
-{ pkgs, ... }:
+{
+  inputs,
+  osConfig,
+  pkgs,
+  ...
+}:
 
 {
   programs = {
+    zsh.envExtra = ''
+      export CLAUDE_CODE_OAUTH_TOKEN="$(cat ${osConfig.age.secrets.claude-token.path})"
+    '';
     gcc.enable = true;
     git = {
       enable = true;
@@ -17,6 +25,7 @@
   };
 
   home.packages = with pkgs; [
+    inputs.agenix.packages.${stdenv.hostPlatform.system}.default
     claude-code
     google-cloud-sdk
     gnumake

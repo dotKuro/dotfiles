@@ -2,6 +2,7 @@
 
 {
   imports = [
+    ./agenix.nix
     ./nix.nix
     ./nix-ld.nix
     ./zsh.nix
