@@ -21,7 +21,6 @@
   };
 
   home.sessionPath = [
-    "$HOME/Scripts"
     "$HOME/.cargo/bin"
   ];
 

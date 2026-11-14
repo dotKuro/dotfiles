@@ -1,0 +1,6 @@
+if [ "$(hyprctl getoption general:layout | grep -c "master")" = 1 ]
+then
+	hyprctl keyword general:layout monocle && hyprctl dispatch focuswindow "address:$(hyprctl -j activewindow | jq -r .address)"
+else
+	hyprctl keyword general:layout master
+fi

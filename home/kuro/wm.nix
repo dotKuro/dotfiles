@@ -52,6 +52,17 @@
     };
   };
 
+  home.packages = [
+    (pkgs.writeShellApplication {
+      name = "toggle-layouts";
+      runtimeInputs = with pkgs; [
+        hyprland
+        jq
+      ];
+      text = builtins.readFile ./scripts/toggle-layouts;
+    })
+  ];
+
   xdg.portal.extraPortals = [ pkgs.xdg-desktop-portal-gtk ];
 
   services.hyprpaper = {
