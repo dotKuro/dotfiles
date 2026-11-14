@@ -3,6 +3,7 @@
 {
   imports = [
     ./cli.nix
+    ./emacs
     ./shell.nix
   ];
 
@@ -12,7 +13,7 @@
   programs.home-manager.enable = true;
 
   home.sessionVariables = {
-    EDITOR = "vim";
+    EDITOR = "e";
     LIBCLANG_PATH = "${pkgs.llvmPackages.libclang.lib}/lib";
   };
 
