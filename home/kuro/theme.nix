@@ -30,10 +30,7 @@
 
   qt = {
     enable = true;
-    platformTheme.name = "gtk";
-    style = {
-      name = "gtk2";
-      package = pkgs.kdePackages.breeze;
-    };
+    platformTheme.name = "gtk3";
+    style.name = "breeze";
   };
 }
