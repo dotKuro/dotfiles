@@ -17,6 +17,11 @@
     owner = "kuro";
   };
 
+  age.secrets.github-token = {
+    file = ../../../../secrets/github-token.age;
+    owner = "kuro";
+  };
+
   home-manager = {
     useGlobalPkgs = true;
     useUserPackages = true;

@@ -9,4 +9,5 @@ let
 in
 {
   "claude-token.age".publicKeys = kuro;
+  "github-token.age".publicKeys = kuro;
 }
