@@ -15,7 +15,7 @@
 
   };
   outputs =
-    inputs@{ nixpkgs, home-manager, ... }:
+    inputs@{ nixpkgs, ... }:
     let
       lib = nixpkgs.lib;
     in
@@ -27,17 +27,7 @@
       nixosConfigurations = {
         cyriax = lib.nixosSystem {
           system = "x86_64-linux";
-          modules = [
-            ./hosts/cyriax
-            home-manager.nixosModules.home-manager
-            {
-              home-manager.useGlobalPkgs = true;
-              home-manager.useUserPackages = true;
-              home-manager.extraSpecialArgs = { inherit inputs; };
-
-              home-manager.users.kuro = import ./home/kuro;
-            }
-          ];
+          modules = [ ./hosts/cyriax ];
           specialArgs = {
             inherit inputs;
           };

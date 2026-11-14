@@ -1,10 +1,9 @@
 { pkgs, ... }:
 
 {
-  home.username = "kuro";
-  home.homeDirectory = "/home/kuro";
-
   imports = [
+    ./shared
+
     ./chrome.nix
     ./lock.nix
     ./programs.nix
@@ -13,10 +12,7 @@
     ./wm.nix
   ];
 
-  programs.home-manager.enable = true;
-
   home.sessionVariables = {
-    EDITOR = "vim";
     LIBCLANG_PATH = "${pkgs.llvmPackages.libclang.lib}/lib";
   };
 

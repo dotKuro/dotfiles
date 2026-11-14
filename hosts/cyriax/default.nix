@@ -1,39 +1,21 @@
-{ pkgs, ... }:
-
 {
   imports = [
     ./hardware-configuration.nix
-
-    ./android.nix
-    ./audio.nix
     ./boot.nix
-    ./docker.nix
-    ./fonts.nix
-    ./hyprland.nix
-    ./networking.nix
-    ./nixld.nix
-    ./users.nix
-    ./zsh.nix
+
+    ../shared/global
+
+    ../shared/optional/android.nix
+    ../shared/optional/audio.nix
+    ../shared/optional/docker.nix
+    ../shared/optional/fonts.nix
+    ../shared/optional/hyprland.nix
+    ../shared/optional/tailscale.nix
+
+    ../shared/users/kuro
   ];
 
   networking.hostName = "cyriax";
-  time.timeZone = "Europe/Berlin";
-
-  nix.settings.experimental-features = [
-    "nix-command"
-    "flakes"
-  ];
-  nix.gc = {
-    automatic = true;
-    dates = "weekly";
-    options = "--delete-older-than 14d";
-  };
-  nix.optimise.automatic = true;
-  nixpkgs.config.allowUnfree = true;
-
-  environment.systemPackages = with pkgs; [
-    vim
-  ];
 
   system.stateVersion = "25.11";
 }
