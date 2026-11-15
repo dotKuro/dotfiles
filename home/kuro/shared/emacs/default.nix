@@ -1,6 +1,5 @@
 {
   config,
-  lib,
   pkgs,
   ...
 }:
@@ -33,11 +32,6 @@
 
   services.emacs.enable = true;
 
-  systemd.user.services.emacs.Unit = {
-    X-RestartIfChanged = lib.mkForce true;
-    X-Restart-Triggers = [ "${config.xdg.configFile."emacs/init.el".source}" ];
-  };
-
   home.packages = with pkgs; [
     gopls
     marksman
@@ -46,7 +40,21 @@
     (writeShellScriptBin "e" ''
       exec ${config.programs.emacs.finalPackage}/bin/emacsclient -t "$@"
     '')
+    (writeShellScriptBin "er" ''
+      exec systemctl --user restart emacs
+    '')
   ];
 
-  xdg.configFile."emacs/init.el".source = ./init.el;
+  xdg.configFile."emacs/init.el" = {
+    source = ./init.el;
+    onChange = ''
+      (
+        export XDG_RUNTIME_DIR="''${XDG_RUNTIME_DIR:-/run/user/$(id -u)}"
+        if [ -S "$XDG_RUNTIME_DIR/emacs/server" ]; then
+          ${pkgs.coreutils}/bin/timeout 10 ${config.programs.emacs.finalPackage}/bin/emacsclient --eval '(load-file user-init-file)' > /dev/null \
+            || echo "emacs: reloading the config failed, restart with er"
+        fi
+      )
+    '';
+  };
 }

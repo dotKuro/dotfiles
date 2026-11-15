@@ -14,6 +14,13 @@ let
     "*"
     "("
   ];
+  bindShifted =
+    key: shifted: command:
+    lib.concatMapStrings (name: "bind -n '${name}' ${command}\n") [
+      "M-${shifted}"
+      "M-S-${key}"
+      "M-S-${shifted}"
+    ];
   workspaceBindings = lib.concatStrings (
     lib.imap1 (
       index: shifted:
@@ -22,8 +29,10 @@ let
       in
       ''
         bind -n 'M-${ws}' if-shell "tmux select-window -t :${ws}" "" "new-window -t :${ws}"
-        bind -n 'M-${shifted}' if-shell "tmux join-pane -d -t :${ws}" "select-layout -t :${ws} main-vertical" "break-pane -d -t :${ws}"
       ''
+      +
+        bindShifted ws shifted
+          ''if-shell "tmux join-pane -d -t :${ws}" "select-layout -t :${ws} main-vertical" "break-pane -d -t :${ws}"''
     ) shiftedDigits
   );
 in
@@ -36,6 +45,8 @@ in
     terminal = "tmux-256color";
     extraConfig = ''
       set -as terminal-features ",xterm-256color:RGB"
+      set -as terminal-features ",xterm*:extkeys"
+      set -s extended-keys on
       set -g status-style "bg=#313131,fg=#ffffff"
       set -g window-status-format " #I:#W "
       set -g window-status-current-format " #I:#W "
@@ -60,12 +71,12 @@ in
       bind -n 'M-${keys.close}' kill-pane
       bind -n 'M-${keys.focusNext}' select-pane -Z -t :.+
       bind -n 'M-${keys.focusPrev}' select-pane -Z -t :.-
-      bind -n 'M-${lib.toUpper keys.focusNext}' swap-pane -D
-      bind -n 'M-${lib.toUpper keys.focusPrev}' swap-pane -U
       bind -n 'M-${keys.toggleLayout}' resize-pane -Z
       bind -n 'M-${tmuxKey keys.master}' select-pane -Z -t :.1
       bind -n 'M-S-${tmuxKey keys.master}' swap-pane -t :.1 \; select-pane -t :.1
     ''
+    + bindShifted keys.focusNext (lib.toUpper keys.focusNext) "swap-pane -D"
+    + bindShifted keys.focusPrev (lib.toUpper keys.focusPrev) "swap-pane -U"
     + workspaceBindings;
   };
 

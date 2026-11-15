@@ -35,6 +35,8 @@
 (evil-define-key '(normal visual motion) 'global (kbd "<leader> b t") #'evil-buffer-new)
 (evil-define-key '(normal visual motion) 'global (kbd "<leader> h") #'tab-line-switch-to-prev-tab)
 (evil-define-key '(normal visual motion) 'global (kbd "<leader> l") #'tab-line-switch-to-next-tab)
+(evil-define-key '(normal visual motion) 'global (kbd "<leader> k") #'tab-line-switch-to-prev-tab)
+(evil-define-key '(normal visual motion) 'global (kbd "<leader> j") #'tab-line-switch-to-next-tab)
 (evil-define-key '(normal visual motion) 'global (kbd "<leader> w h") #'evil-window-left)
 (evil-define-key '(normal visual motion) 'global (kbd "<leader> w j") #'evil-window-down)
 (evil-define-key '(normal visual motion) 'global (kbd "<leader> w k") #'evil-window-up)
