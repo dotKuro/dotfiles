@@ -1,4 +1,13 @@
-{ inputs, pkgs, ... }:
+{
+  inputs,
+  lib,
+  pkgs,
+  ...
+}:
+
+let
+  keys = lib.mapAttrs (_: lib.toUpper) (import ../shared/tiling-keys.nix);
+in
 
 {
   wayland.windowManager.hyprland = {
@@ -25,17 +34,19 @@
         kb_layout = "eu";
       };
       bind = [
-        "$mod, W, exec, kitty"
-        "$mod, E, exec, rofi -show drun"
-        "$mod, Q, killactive"
-        "$mod, J, cyclenext, tiled"
-        "$mod, K, cyclenext, prev tiled"
+        "$mod, ${keys.spawn}, exec, kitty"
+        "$mod, ${keys.launcher}, exec, rofi -show drun"
+        "$mod, ${keys.close}, killactive"
+        "$mod, ${keys.focusNext}, cyclenext, tiled"
+        "$mod, ${keys.focusPrev}, cyclenext, prev tiled"
         "$mod, L, exec, hyprlock"
-        "$mod SHIFT, J, swapnext"
-        "$mod SHIFT, K, swapnext, prev"
+        "$mod SHIFT, ${keys.focusNext}, swapnext"
+        "$mod SHIFT, ${keys.focusPrev}, swapnext, prev"
         "$mod, TAB, focusmonitor, +1"
         "$mod SHIFT, TAB, movewindow, mon:+1"
-        "$mod, F, exec, toggle-layouts"
+        "$mod, ${keys.toggleLayout}, exec, toggle-layouts"
+        "$mod, ${keys.master}, layoutmsg, focusmaster master"
+        "$mod SHIFT, ${keys.master}, layoutmsg, swapwithmaster master"
       ]
       ++ (builtins.concatLists (
         builtins.genList (

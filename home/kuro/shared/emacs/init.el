@@ -11,8 +11,14 @@
 (global-tab-line-mode 1)
 
 (load-theme 'modus-vivendi-deuteranopia t)
+(custom-set-faces
+ '(evil-ex-substitute-matches
+   ((t :inherit diff-refine-removed :background unspecified :foreground unspecified)))
+ '(evil-ex-substitute-replacement
+   ((t :inherit diff-refine-added :background unspecified :foreground unspecified))))
 
 (setq evil-want-keybinding nil)
+(setq evil-want-C-i-jump nil)
 (require 'evil)
 (setq evil-default-cursor 'box)
 (setq evil-vsplit-window-right t)
@@ -22,7 +28,9 @@
 (evil-define-key '(normal visual motion) 'global (kbd "<leader> f f") #'find-file)
 (evil-define-key '(normal visual motion) 'global (kbd "<leader> SPC") #'project-find-file)
 (evil-define-key '(normal visual motion) 'global (kbd "<leader> g g") #'magit-status)
-(evil-define-key '(normal visual motion) 'global (kbd "<leader> b b") #'switch-to-buffer)
+(evil-define-key '(normal visual motion) 'global (kbd "<leader> c c") #'execute-extended-command)
+(evil-define-key '(normal visual motion) 'global (kbd "<leader> c r") #'eglot-rename)
+(evil-define-key '(normal visual motion) 'global (kbd "<leader> b b") #'kuro/switch-buffer)
 (evil-define-key '(normal visual motion) 'global (kbd "<leader> b d") #'kill-current-buffer)
 (evil-define-key '(normal visual motion) 'global (kbd "<leader> b t") #'evil-buffer-new)
 (evil-define-key '(normal visual motion) 'global (kbd "<leader> h") #'tab-line-switch-to-prev-tab)
@@ -39,11 +47,74 @@
 (require 'magit)
 (require 'evil-collection)
 (evil-collection-init 'magit)
+(evil-define-key '(normal visual) magit-mode-map (kbd "SPC") (lookup-key evil-normal-state-map (kbd "<leader>")))
+(keymap-set transient-map "<escape>" #'transient-quit-one)
+
+(require 'multisession)
+(defvar kuro/project-trust
+  (make-multisession :package "kuro" :key "project-trust" :initial-value nil))
+
+(setq trusted-content
+      (mapcar #'car (seq-filter #'cdr (multisession-value kuro/project-trust))))
+
+(defun kuro/project-root ()
+  (abbreviate-file-name
+   (file-truename
+    (file-name-as-directory
+     (if-let* ((project (project-current)))
+         (project-root project)
+       default-directory)))))
+
+(defun kuro/project-trusted-p ()
+  (let* ((root (kuro/project-root))
+         (entry (assoc root (multisession-value kuro/project-trust))))
+    (unless entry
+      (setq entry (cons root (y-or-n-p (format "Trust %s? " root))))
+      (push entry (multisession-value kuro/project-trust))
+      (when (cdr entry)
+        (push root trusted-content)))
+    (cdr entry)))
+
+(defun kuro/reset-project-trust ()
+  (interactive)
+  (let ((root (kuro/project-root)))
+    (setf (multisession-value kuro/project-trust)
+          (assoc-delete-all root (multisession-value kuro/project-trust)))
+    (setq trusted-content (delete root trusted-content))
+    (message "Trust for %s reset" root)))
+
+(defun kuro/eglot-ensure ()
+  (when (kuro/project-trusted-p)
+    (eglot-ensure)))
+
+(require 'markdown-mode)
+(add-hook 'markdown-mode-hook #'kuro/eglot-ensure)
+
+(defun kuro/format-on-save ()
+  (add-hook 'before-save-hook
+            (lambda () (when (eglot-managed-p) (eglot-format-buffer)))
+            nil t))
+
+(add-hook 'go-ts-mode-hook #'kuro/eglot-ensure)
+(add-hook 'go-ts-mode-hook #'kuro/format-on-save)
+
+(setopt treesit-enabled-modes '(json-ts-mode))
+(setq-default eglot-workspace-configuration '(:json (:validate (:enable t))))
+(add-hook 'json-ts-mode-hook #'kuro/eglot-ensure)
+(add-hook 'yaml-ts-mode-hook #'kuro/eglot-ensure)
 
 (keymap-set minibuffer-local-map "<escape>" #'abort-minibuffers)
 
 (require 'vertico)
 (vertico-mode 1)
+
+(require 'marginalia)
+(setq marginalia-annotators '((command marginalia-annotate-command builtin none)))
+(marginalia-mode 1)
+
+(require 'corfu)
+(setq corfu-auto t)
+(global-corfu-mode 1)
 
 (require 'orderless)
 (setq completion-styles '(orderless basic))
@@ -146,3 +217,12 @@
         (setq default-directory (file-name-as-directory directory))))))
 
 (add-hook 'server-after-make-frame-hook #'kuro/use-client-directory)
+
+(defun kuro/user-buffer-p (candidate)
+  (let ((name (if (consp candidate) (car candidate) candidate)))
+    (or (not (string-match-p "\\`[ *]" name))
+        (string-match-p "\\`\\*\\(scratch\\|new\\)\\*" name))))
+
+(defun kuro/switch-buffer ()
+  (interactive)
+  (switch-to-buffer (read-buffer "Switch to buffer: " nil t #'kuro/user-buffer-p)))

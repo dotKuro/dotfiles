@@ -5,6 +5,7 @@
     ./cli.nix
     ./emacs
     ./shell.nix
+    ./tmux.nix
   ];
 
   home.username = "kuro";
