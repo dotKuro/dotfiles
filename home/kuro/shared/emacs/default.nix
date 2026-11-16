@@ -10,8 +10,10 @@
     package = pkgs.emacs-nox;
     extraPackages =
       epkgs: with epkgs; [
+        consult
         corfu
         embark
+        embark-consult
         evil
         evil-collection
         magit
@@ -23,6 +25,7 @@
             tree-sitter-go
             tree-sitter-gomod
             tree-sitter-json
+            tree-sitter-rust
             tree-sitter-yaml
           ]
         ))
@@ -31,6 +34,7 @@
   };
 
   services.emacs.enable = true;
+  systemd.user.services.emacs.Service.Environment = "COLORTERM=truecolor";
 
   home.packages = with pkgs; [
     gopls

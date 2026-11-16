@@ -41,17 +41,14 @@ in
     enable = true;
     baseIndex = 1;
     escapeTime = 0;
+    focusEvents = true;
     mouse = true;
     terminal = "tmux-256color";
     extraConfig = ''
       set -as terminal-features ",xterm-256color:RGB"
       set -as terminal-features ",xterm*:extkeys"
       set -s extended-keys on
-      set -g status-style "bg=#313131,fg=#ffffff"
-      set -g window-status-format " #I:#W "
-      set -g window-status-current-format " #I:#W "
-      set -g window-status-style "bg=#545454"
-      set -g window-status-current-style "bg=#000000,bold"
+      set -g status off
       set -g message-style "bg=#2a2a6a,fg=#f0f0f0"
       set -g mode-style "bg=#5a5a5a,fg=#ffffff"
       set -g pane-border-lines heavy

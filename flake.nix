@@ -34,10 +34,6 @@
         settings.global.excludes = [ "hosts/*/hardware-configuration.nix" ];
       };
 
-      packages.x86_64-linux.zsa-layer-switch =
-        nixpkgs.legacyPackages.x86_64-linux.pkgsCross.mingwW64.callPackage ./pkgs/zsa-layer-switch
-          { };
-
       nixosConfigurations = {
         cyriax = lib.nixosSystem {
           system = "x86_64-linux";
@@ -50,6 +46,14 @@
         cyriax-wsl = lib.nixosSystem {
           system = "x86_64-linux";
           modules = [ ./hosts/cyriax-wsl ];
+          specialArgs = {
+            inherit inputs;
+          };
+        };
+
+        work-wsl = lib.nixosSystem {
+          system = "x86_64-linux";
+          modules = [ ./hosts/work-wsl ];
           specialArgs = {
             inherit inputs;
           };
