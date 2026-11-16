@@ -8,7 +8,6 @@
 {
   programs = {
     zsh.envExtra = ''
-      export CLAUDE_CODE_OAUTH_TOKEN="$(cat ${osConfig.age.secrets.claude-token.path})"
       export GH_TOKEN="$(cat ${osConfig.age.secrets.github-token.path})"
     '';
     gcc.enable = true;

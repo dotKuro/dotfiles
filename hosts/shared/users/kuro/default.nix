@@ -12,11 +12,6 @@
     initialPassword = "1337";
   };
 
-  age.secrets.claude-token = {
-    file = ../../../../secrets/claude-token.age;
-    owner = "kuro";
-  };
-
   age.secrets.github-token = {
     file = ../../../../secrets/github-token.age;
     owner = "kuro";
