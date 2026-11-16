@@ -51,6 +51,14 @@
           };
         };
 
+        min-wsl = lib.nixosSystem {
+          system = "x86_64-linux";
+          modules = [ ./hosts/min-wsl ];
+          specialArgs = {
+            inherit inputs;
+          };
+        };
+
         work-wsl = lib.nixosSystem {
           system = "x86_64-linux";
           modules = [ ./hosts/work-wsl ];

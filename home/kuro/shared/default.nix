@@ -1,5 +1,3 @@
-{ pkgs, ... }:
-
 {
   imports = [
     ./cli.nix
@@ -15,10 +13,5 @@
 
   home.sessionVariables = {
     EDITOR = "e";
-    LIBCLANG_PATH = "${pkgs.llvmPackages.libclang.lib}/lib";
   };
-
-  home.sessionPath = [
-    "$HOME/.cargo/bin"
-  ];
 }

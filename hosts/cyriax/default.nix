@@ -10,6 +10,7 @@
     ../shared/optional/docker.nix
     ../shared/optional/fonts.nix
     ../shared/optional/hyprland.nix
+    ../shared/optional/secrets.nix
     ../shared/optional/tailscale.nix
 
     ../shared/users/kuro

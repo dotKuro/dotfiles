@@ -1,6 +1,7 @@
 {
   imports = [
     ./shared
+    ./private
     ./wsl
   ];
 
