@@ -520,10 +520,19 @@
   (interactive)
   (switch-to-buffer (read-buffer "Switch to buffer: " nil t #'kuro/user-buffer-p)))
 
+(defun kuro/tab-window (buffer)
+  (seq-find (lambda (window)
+              (or (eq buffer (window-buffer window))
+                  (assq buffer (window-prev-buffers window))
+                  (memq buffer (window-next-buffers window))))
+            (window-list nil 'nomini)))
+
 (defun kuro/find-buffer ()
   (interactive)
-  (let* ((buffer (read-buffer "Find buffer: " nil t #'kuro/user-buffer-p))
-         (window (get-buffer-window buffer)))
+  (let* ((buffer (get-buffer (read-buffer "Find buffer: " nil t #'kuro/user-buffer-p)))
+         (window (kuro/tab-window buffer)))
     (if window
-        (select-window window)
+        (progn
+          (select-window window)
+          (tab-line-select-tab-buffer buffer window))
       (switch-to-buffer buffer))))
