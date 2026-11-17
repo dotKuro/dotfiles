@@ -1,4 +1,4 @@
-{ config, inputs, ... }:
+{ inputs, ... }:
 
 {
   imports = [
@@ -16,7 +16,5 @@
     useGlobalPkgs = true;
     useUserPackages = true;
     extraSpecialArgs = { inherit inputs; };
-
-    users.kuro = import ../../../../home/kuro/${config.networking.hostName}.nix;
   };
 }

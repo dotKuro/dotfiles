@@ -11,5 +11,7 @@
 
   networking.hostName = "cyriax-wsl";
 
+  home-manager.users.kuro = import ../../home/kuro/cyriax-wsl.nix;
+
   system.stateVersion = "26.05";
 }

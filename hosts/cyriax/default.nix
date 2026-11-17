@@ -18,6 +18,8 @@
 
   networking.hostName = "cyriax";
 
+  home-manager.users.kuro = import ../../home/kuro/cyriax.nix;
+
   virtualisation.docker.storageDriver = "btrfs";
 
   fileSystems."/home".neededForBoot = true;

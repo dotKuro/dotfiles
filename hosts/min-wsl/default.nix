@@ -10,5 +10,7 @@
 
   networking.hostName = "min-wsl";
 
+  home-manager.users.kuro = import ../../home/kuro/min-wsl.nix;
+
   system.stateVersion = "26.11";
 }

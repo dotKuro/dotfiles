@@ -11,5 +11,7 @@
 
   networking.hostName = "work-wsl";
 
+  home-manager.users.kuro = import ../../home/kuro/work-wsl.nix;
+
   system.stateVersion = "26.11";
 }
