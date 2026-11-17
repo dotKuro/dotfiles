@@ -6,6 +6,10 @@
 }:
 
 {
+  imports = [
+    ./emacs
+  ];
+
   programs = {
     zsh.envExtra = ''
       export GH_TOKEN="$(cat ${osConfig.age.secrets.github-token.path})"

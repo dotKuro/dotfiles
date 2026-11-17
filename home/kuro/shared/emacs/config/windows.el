@@ -1,0 +1,155 @@
+;;; -*- lexical-binding: t; -*-
+
+(require 'cl-lib)
+(load (locate-user-emacs-file "tiling-keys.el"))
+
+(defun kuro/tile-windows ()
+  (seq-remove (lambda (window) (window-parameter window 'window-side))
+              (window-list nil 'nomini (frame-first-window))))
+
+(defun kuro/tile-pane (window)
+  (cons (window-state-get window) (gethash window evil--jumps-window-jumps)))
+
+(defun kuro/tile-put (window pane)
+  (window-state-put (car pane) window 'safe)
+  (if (cdr pane)
+      (puthash window (cdr pane) evil--jumps-window-jumps)
+    (remhash window evil--jumps-window-jumps)))
+
+(defun kuro/tile-panes ()
+  (let ((windows (kuro/tile-windows))
+        (hidden (frame-parameter nil 'kuro/tile-hidden)))
+    (cons (append (car hidden) (mapcar #'kuro/tile-pane windows) (cdr hidden))
+          (+ (length (car hidden)) (or (seq-position windows (selected-window)) 0)))))
+
+(defun kuro/tile-show (panes index zoomed)
+  (let* ((configuration (current-window-configuration))
+         (visible (if zoomed (list (nth index panes)) panes))
+         (window (car (kuro/tile-windows)))
+         (windows (list window)))
+    (condition-case failure
+        (progn
+          (delete-other-windows window)
+          (when (cdr visible)
+            (setq window (split-window window (round (* 0.55 (window-total-width window))) 'right))
+            (push window windows)
+            (dotimes (step (- (length visible) 2))
+              (setq window (split-window window
+                                         (/ (window-total-height window) (- (length visible) 1 step))
+                                         'below))
+              (push window windows)))
+          (setq windows (nreverse windows))
+          (cl-mapc #'kuro/tile-put windows visible))
+      (error
+       (set-window-configuration configuration)
+       (signal (car failure) (cdr failure))))
+    (set-frame-parameter nil 'kuro/tile-hidden
+                         (and zoomed (cdr panes)
+                              (cons (take index panes) (nthcdr (1+ index) panes))))
+    (select-window (nth (if zoomed 0 index) windows))))
+
+(defun kuro/tile-target (offset index count)
+  (if offset (mod (+ index offset) count) 0))
+
+(defun kuro/tile-focus (offset)
+  (pcase-let* ((`(,panes . ,index) (kuro/tile-panes))
+               (target (kuro/tile-target offset index (length panes))))
+    (if (frame-parameter nil 'kuro/tile-hidden)
+        (kuro/tile-show panes target t)
+      (select-window (nth target (kuro/tile-windows))))))
+
+(defun kuro/tile-swap (offset)
+  (pcase-let* ((`(,panes . ,index) (kuro/tile-panes))
+               (target (kuro/tile-target offset index (length panes))))
+    (cl-rotatef (nth index panes) (nth target panes))
+    (kuro/tile-show panes target nil)))
+
+(defun kuro/tile-spawn ()
+  (interactive)
+  (pcase-let ((`(,panes . ,index) (kuro/tile-panes)))
+    (kuro/tile-show (append (take (1+ index) panes)
+                            (list (list (car (nth index panes))))
+                            (nthcdr (1+ index) panes))
+                    (1+ index)
+                    nil)
+    (set-window-prev-buffers nil nil)
+    (set-window-next-buffers nil nil)))
+
+(defun kuro/tile-close ()
+  (interactive)
+  (pcase-let ((`(,panes . ,index) (kuro/tile-panes)))
+    (unless (cdr panes)
+      (user-error "Only one window"))
+    (kuro/tile-show (append (take index panes) (nthcdr (1+ index) panes))
+                    (min index (- (length panes) 2))
+                    (frame-parameter nil 'kuro/tile-hidden))))
+
+(defun kuro/tile-toggle-layout ()
+  (interactive)
+  (pcase-let ((`(,panes . ,index) (kuro/tile-panes)))
+    (kuro/tile-show panes index (not (frame-parameter nil 'kuro/tile-hidden)))))
+
+(defun kuro/tile-focus-next () (interactive) (kuro/tile-focus 1))
+(defun kuro/tile-focus-previous () (interactive) (kuro/tile-focus -1))
+(defun kuro/tile-focus-main () (interactive) (kuro/tile-focus nil))
+(defun kuro/tile-swap-next () (interactive) (kuro/tile-swap 1))
+(defun kuro/tile-swap-previous () (interactive) (kuro/tile-swap -1))
+(defun kuro/tile-swap-main () (interactive) (kuro/tile-swap nil))
+
+(defun kuro/tile-key (name &optional shift)
+  (let ((key (alist-get name kuro/tiling-keys)))
+    (kbd (concat "<leader> w "
+                 (cond ((equal key "Return") (if shift "S-<return>" "RET"))
+                       (shift (upcase key))
+                       (t key))))))
+
+(evil-define-key '(normal visual motion) 'global (kuro/tile-key 'spawn) #'kuro/tile-spawn)
+(evil-define-key '(normal visual motion) 'global (kuro/tile-key 'close) #'kuro/tile-close)
+(evil-define-key '(normal visual motion) 'global (kuro/tile-key 'toggleLayout) #'kuro/tile-toggle-layout)
+(evil-define-key '(normal visual motion) 'global (kuro/tile-key 'focusNext) #'kuro/tile-focus-next)
+(evil-define-key '(normal visual motion) 'global (kuro/tile-key 'focusPrev) #'kuro/tile-focus-previous)
+(evil-define-key '(normal visual motion) 'global (kuro/tile-key 'master) #'kuro/tile-focus-main)
+(evil-define-key '(normal visual motion) 'global (kuro/tile-key 'focusNext t) #'kuro/tile-swap-next)
+(evil-define-key '(normal visual motion) 'global (kuro/tile-key 'focusPrev t) #'kuro/tile-swap-previous)
+(evil-define-key '(normal visual motion) 'global (kuro/tile-key 'master t) #'kuro/tile-swap-main)
+
+(defun kuro/user-buffer-p (candidate)
+  (let ((name (if (consp candidate) (car candidate) candidate)))
+    (or (not (string-match-p "\\`[ *]" name))
+        (string-match-p "\\`\\*\\(scratch\\|new\\)\\*" name))))
+
+(defun kuro/switch-buffer ()
+  (interactive)
+  (switch-to-buffer (read-buffer "Switch to buffer: " nil t #'kuro/user-buffer-p)))
+
+(defun kuro/tab-window (buffer &optional windows)
+  (seq-find (lambda (window)
+              (or (eq buffer (window-buffer window))
+                  (assq buffer (window-prev-buffers window))
+                  (memq buffer (window-next-buffers window))))
+            (or windows (window-list nil 'nomini))))
+
+(defun kuro/close-tab ()
+  (interactive)
+  (if (kuro/tab-window (current-buffer) (cdr (window-list nil 'nomini)))
+      (bury-buffer)
+    (kill-current-buffer)))
+
+(defun kuro/find-buffer ()
+  (interactive)
+  (let* ((buffer (get-buffer (read-buffer "Find buffer: " nil t #'kuro/user-buffer-p)))
+         (window (kuro/tab-window buffer)))
+    (if window
+        (progn
+          (select-window window)
+          (tab-line-select-tab-buffer buffer window))
+      (switch-to-buffer buffer))))
+
+(evil-define-key '(normal visual motion) 'global (kbd "<leader> b b") #'kuro/switch-buffer)
+(evil-define-key '(normal visual motion) 'global (kbd "<leader> b d") #'kuro/close-tab)
+(evil-define-key '(normal visual motion) 'global (kbd "<leader> b f") #'kuro/find-buffer)
+(evil-define-key '(normal visual motion) 'global (kbd "<leader> b t") #'evil-buffer-new)
+(evil-define-key '(normal visual motion) 'global (kbd "<leader> h") #'tab-line-switch-to-prev-tab)
+(evil-define-key '(normal visual motion) 'global (kbd "<leader> l") #'tab-line-switch-to-next-tab)
+(evil-define-key '(normal visual motion) 'global (kbd "<leader> k") #'tab-line-switch-to-prev-tab)
+(evil-define-key '(normal visual motion) 'global (kbd "<leader> j") #'tab-line-switch-to-next-tab)

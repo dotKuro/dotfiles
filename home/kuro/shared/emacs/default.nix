@@ -42,7 +42,6 @@ in
             tree-sitter-go
             tree-sitter-gomod
             tree-sitter-json
-            tree-sitter-rust
             tree-sitter-yaml
           ]
         ))
@@ -68,6 +67,11 @@ in
 
   xdg.configFile."emacs/init.el" = {
     source = ./init.el;
+    onChange = reload;
+  };
+
+  xdg.configFile."emacs/config" = {
+    source = ./config;
     onChange = reload;
   };
 
