@@ -7,6 +7,10 @@
 
 let
   keys = import ../tiling-keys.nix;
+  sprite = pkgs.fetchurl {
+    url = "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-v/black-white/559.png";
+    hash = "sha256-RxlyG7qHi84dx9y7mKkt9fUCgT7nnIZnn2XXbPTfxcc=";
+  };
   reload = ''
     (
       export XDG_RUNTIME_DIR="''${XDG_RUNTIME_DIR:-/run/user/$(id -u)}"
@@ -73,6 +77,13 @@ in
       (defconst kuro/tiling-keys '(${
         lib.concatStringsSep " " (lib.mapAttrsToList (name: key: ''(${name} . "${key}")'') keys)
       }))
+    '';
+    onChange = reload;
+  };
+
+  xdg.configFile."emacs/start-art.el" = {
+    source = pkgs.runCommand "start-art.el" { nativeBuildInputs = [ pkgs.imagemagick ]; } ''
+      magick ${sprite} -trim +repage -depth 8 txt:- | awk -f ${./start-art.awk} > $out
     '';
     onChange = reload;
   };
