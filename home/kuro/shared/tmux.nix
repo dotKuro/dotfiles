@@ -47,6 +47,7 @@ in
     extraConfig = ''
       set -as terminal-features ",xterm-256color:RGB"
       set -as terminal-features ",xterm*:extkeys"
+      set -as terminal-features ",xterm-256color:usstyle"
       set -s extended-keys on
       set -g status off
       set -g message-style "bg=#2a2a6a,fg=#f0f0f0"
