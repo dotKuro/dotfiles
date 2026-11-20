@@ -1,5 +1,6 @@
 ;;; -*- lexical-binding: t; -*-
 
+(require 'apheleia)
 (require 'multisession)
 (defvar kuro/project-trust
   (make-multisession :package "kuro" :key "project-trust" :initial-value nil))
@@ -25,8 +26,11 @@
     (setq trusted-content (delete root trusted-content))
     (message "Trust for %s reset" root)))
 
+(setq eglot-extend-to-xref t)
+
 (defun kuro/eglot-ensure ()
-  (when (kuro/project-trusted-p)
+  (when (or (and (featurep 'eglot) (eglot-current-server))
+            (kuro/project-trusted-p))
     (eglot-ensure)))
 
 (defun kuro/code-action-hint (suggest callback &rest arguments)
@@ -46,14 +50,10 @@
             (lambda () (when (eglot-managed-p) (eglot-format-buffer)))
             nil t))
 
-(defun kuro/organize-imports ()
-  (when (eglot-managed-p)
-    (with-demoted-errors "Organize imports: %S"
-      (dolist (action (eglot-code-actions (point-min) (point-max) "source.organizeImports"))
-        (eglot-execute (eglot-current-server) action)))))
-
-(defun kuro/organize-imports-on-save ()
-  (add-hook 'before-save-hook #'kuro/organize-imports -10 t))
+(defun kuro/async-format-on-save ()
+  (add-hook 'eglot-managed-mode-hook
+            (lambda () (apheleia-mode (if (eglot-managed-p) 1 -1)))
+            nil t))
 
 (evil-define-key '(normal visual motion) 'global (kbd "<leader> c r") #'eglot-rename)
 (evil-define-key '(normal visual motion) 'global (kbd "<leader> c a") #'eglot-code-actions)

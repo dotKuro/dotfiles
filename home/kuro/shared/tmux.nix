@@ -35,6 +35,22 @@ let
           ''if-shell "tmux join-pane -d -t :${ws}" "select-layout -t :${ws} main-vertical" "break-pane -d -t :${ws}"''
     ) shiftedDigits
   );
+  copySelection = ''send-keys -X copy-pipe-no-clear \; delete-buffer'';
+  copyModeMouse =
+    lib.concatMapStrings
+      (table: ''
+        bind -T ${table} MouseDown1Pane select-pane \; if -F "#{scroll_position}" { send-keys -X clear-selection } { send-keys -X cancel }
+        bind -T ${table} MouseDragEnd1Pane ${copySelection}
+        bind -T ${table} DoubleClick1Pane select-pane \; send-keys -X select-word \; run-shell -d 0.3 \; ${copySelection}
+        bind -T ${table} TripleClick1Pane select-pane \; send-keys -X select-line \; run-shell -d 0.3 \; ${copySelection}
+      '')
+      [
+        "copy-mode"
+        "copy-mode-vi"
+      ];
+  bindClickSelect = click: unit: ''
+    bind -n ${click} select-pane -t = \; if -F "#{||:#{pane_in_mode},#{mouse_any_flag}}" { send-keys -M } { copy-mode -H ; send-keys -X select-${unit} ; run-shell -d 0.3 ; send-keys -X copy-pipe-no-clear ; delete-buffer }
+  '';
 in
 {
   programs.tmux = {
@@ -72,7 +88,12 @@ in
       bind -n 'M-${keys.toggleLayout}' resize-pane -Z
       bind -n 'M-${tmuxKey keys.master}' select-pane -Z -t :.1
       bind -n 'M-S-${tmuxKey keys.master}' swap-pane -t :.1 \; select-pane -t :.1
+
+      unbind -n MouseDown2Pane
     ''
+    + copyModeMouse
+    + bindClickSelect "DoubleClick1Pane" "word"
+    + bindClickSelect "TripleClick1Pane" "line"
     + bindShifted keys.focusNext (lib.toUpper keys.focusNext) "swap-pane -D"
     + bindShifted keys.focusPrev (lib.toUpper keys.focusPrev) "swap-pane -U"
     + workspaceBindings;

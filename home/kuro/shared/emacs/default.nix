@@ -27,6 +27,7 @@ in
     package = pkgs.emacs-nox;
     extraPackages =
       epkgs: with epkgs; [
+        apheleia
         consult
         corfu
         embark
@@ -42,6 +43,7 @@ in
             tree-sitter-go
             tree-sitter-gomod
             tree-sitter-json
+            tree-sitter-rego
             tree-sitter-yaml
           ]
         ))
@@ -55,6 +57,8 @@ in
   home.packages = with pkgs; [
     gopls
     marksman
+    open-policy-agent
+    regal
     vscode-langservers-extracted
     yaml-language-server
     (writeShellScriptBin "e" ''
@@ -62,6 +66,9 @@ in
     '')
     (writeShellScriptBin "er" ''
       exec systemctl --user restart emacs
+    '')
+    (writeShellScriptBin "goimports" ''
+      exec ${gotools}/bin/goimports "$@"
     '')
   ];
 
