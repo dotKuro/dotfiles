@@ -46,7 +46,7 @@
 (defun kuro/rego-indent-line ()
   (let ((column (save-excursion
                   (back-to-indentation)
-                  (* tab-width
+                  (* 2
                      (max 0 (- (car (syntax-ppss))
                                (if (looking-at-p "[]})]") 1 0)))))))
     (if (<= (current-column) (current-indentation))
@@ -56,7 +56,7 @@
 (define-derived-mode rego-ts-mode prog-mode "Rego"
   (setq-local comment-start "# "
               comment-end ""
-              indent-tabs-mode t
+              indent-tabs-mode nil
               indent-line-function #'kuro/rego-indent-line
               eglot-ignored-server-capabilities '(:diagnosticProvider))
   (when (treesit-ready-p 'rego)
@@ -73,8 +73,4 @@
 (with-eval-after-load 'eglot
   (add-to-list 'eglot-server-programs '(rego-ts-mode . ("regal" "language-server"))))
 
-(setf (alist-get 'opa-fmt apheleia-formatters) '("opa" "fmt"))
-(setf (alist-get 'rego-ts-mode apheleia-mode-alist) 'opa-fmt)
-
 (add-hook 'rego-ts-mode-hook #'kuro/eglot-ensure)
-(add-hook 'rego-ts-mode-hook #'kuro/async-format-on-save)

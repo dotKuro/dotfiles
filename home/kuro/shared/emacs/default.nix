@@ -57,7 +57,6 @@ in
   home.packages = with pkgs; [
     gopls
     marksman
-    open-policy-agent
     regal
     vscode-langservers-extracted
     yaml-language-server
